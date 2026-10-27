@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Message</title>
+</head>
+<body>
+    <h3>Edit Yout Chat!! </h3>
+    <h3>Chat ID : <%= foundchat._id %></h3>
+    <form action="/chats/<%=foundchat._id%>?_method=PUT" method="POST">
+        <textarea name="msg" rows="10" cols="50"><%= foundchat.msg%></textarea>
+        <button>EDIT</button>
+    </form>
+</body>
+</html>
