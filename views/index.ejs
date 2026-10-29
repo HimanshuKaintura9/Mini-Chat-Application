@@ -1,37 +1,129 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whatsapp Chats</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Chats | Lavender</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-     <h3>All Chats !!</h3>
-     <form action="/chats/new" method="GET">
-        <button>New Chat </button>
-        <br><br>
-     </form>
-     
-     <% for(let chat of chats){ %>
-        <div class = "chat">
-            <p>from : <%= chat.from %></p>
-            <p>to : <%= chat.to %></p>
-            <div class = "message">
-                <p>message is  : <%= chat.msg %></p>
-                
+
+    <h3>All Chats</h3>
+    <p class="page-description">Your messages, all in one place.</p>
+
+    <form action="/chats/new" method="GET">
+        <button class="new-chat-btn">+ New Chat</button>
+    </form>
+
+    <div class="chat-container">
+        <% for (let chat of chats) { %>
+            <div class="chat">
+
+                <div class="chat-people">
+                    <strong><%= chat.from %></strong>
+                    <span>to</span>
+                    <strong><%= chat.to %></strong>
+                </div>
+
+                <div class="message">
+                    <p><%= chat.msg %></p>
+                </div>
+
+                <p class="chat-meta">
+                    Created:
+                    <%= chat.created_at
+                        ? new Date(chat.created_at).toLocaleString()
+                        : "Date unavailable" %>
+                </p>
+
+                <p class="chat-meta">
+                    Last updated:
+                    <%= chat.updated_at
+                        ? new Date(chat.updated_at).toLocaleString()
+                        : "Not recorded" %>
+                </p>
+
+                <div class="chat-actions">
+                    <form action="/chats/<%= chat._id %>/edit" method="GET">
+                        <button class="edit-btn">Edit</button>
+                    </form>
+                    <form
+                        action="/chats/<%= chat._id %>?_method=DELETE"
+                        method="POST"
+                        class="delete-form"
+                    >
+                        <button type="button" class="delete-btn"
+                            onclick="openDeleteModal(this)">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </div>
-            <p>time : <%= chat.created_at.toString().split(" ")[4]%></p>
-            <p>date : <%= chat.created_at.toString().split(" ").slice(0,4).join("-")%></p>
-            <form action="/chats/<%= chat.id %>/edit" method="GET">
-                <button>EDIT Message</button>
-            </form> 
-            <br>
-            <form action="/chats/<%=chat._id%>?_method=DELETE" method="POST" >
-                <button>DELETE</button>
-            </form>
+            
+        <% } %>
+</div>
+<div class="modal-overlay" id="deleteModal" aria-hidden="true">
+    <div class="modal-card" role="dialog"
+         aria-modal="true" aria-labelledby="modalTitle">
+
+        <div class="modal-icon">!</div>
+
+        <h2 id="modalTitle">Delete this chat?</h2>
+
+        <p>
+            Are you sure you want to delete this message?
+            This action cannot be undone.
+        </p>
+
+        <div class="modal-actions">
+            <button type="button" class="cancel-btn"
+                onclick="closeDeleteModal()">
+                Cancel
+            </button>
+
+            <button type="button" class="confirm-delete-btn"
+                onclick="confirmDelete()">
+                Yes, delete
+            </button>
         </div>
-        <br>
-    <% } %>
+    </div>
+
+<script>
+    let formToDelete = null;
+
+    function openDeleteModal(button) {
+        formToDelete = button.closest(".delete-form");
+
+        const modal = document.getElementById("deleteModal");
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById("deleteModal");
+        modal.classList.remove("active");
+        modal.setAttribute("aria-hidden", "true");
+        formToDelete = null;
+    }
+
+    function confirmDelete() {
+        if (formToDelete) {
+            formToDelete.submit();
+        }
+    }
+
+    document.getElementById("deleteModal").addEventListener("click", function(event) {
+        if (event.target === this) {
+            closeDeleteModal();
+        }
+    });
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closeDeleteModal();
+        }
+    });
+</script>
 </body>
 </html>

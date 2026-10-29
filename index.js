@@ -34,32 +34,38 @@ app.get("/", (req,res) => {
 })
 
 //INDEX ROUTE
-app.get("/chats" ,async (req,res) => {
-    let chats = await chat.find();
-    // console.log(chats); 
-    res.render("index.ejs",{chats});  
-})
+app.get("/chats", async (req, res) => {
+    try {
+        const chats = await Chat.find().sort({ created_at: -1 });
+        res.render("index.ejs", { chats });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Unable to load chats");
+    }
+});
 // NEW CHAT ROUTE       
 app.get("/chats/new",(req,res) => {
     res.render("new.ejs");
     // res.redirect("/chats");
 })
 // CREATE ROUTE 
-app.post("/chats",(req,res)=>{
-    let { from , to , msg} = req.body;
-    let newChat = new chat({
-        from : from,
-        to : to,
-        msg : msg,
-        created_at : new Date()
-    });
-    newChat.save().then((res)=>{
-        console.log("Chat is saved");
-    }).catch((err)=>{
+app.post("/chats", async (req, res) => {
+    try {
+        let { from, to, msg } = req.body;
+
+        await Chat.create({
+            from,
+            to,
+            msg,
+            created_at: new Date()
+        });
+
+        res.redirect("/chats");
+    } catch (err) {
         console.log(err);
-    })
-    res.redirect("/chats");
-})
+        res.status(500).send("Unable to create chat");
+    }
+});
 
 
 app.get("/chats/:id/edit" , async (req,res)=>{
@@ -68,13 +74,30 @@ app.get("/chats/:id/edit" , async (req,res)=>{
     res.render("edit.ejs",{foundchat});
 })
 
-app.put("/chats/:id" ,async (req,res) => {
-    let {id} = req.params;
-    let {msg : newMsg} = req.body;
-    let updatedChat = await  chat.findByIdAndUpdate(id,{msg : newMsg}, { runValidators: true, new: true });
-    console.log(newMsg);
-    res.redirect("/chats");
-})
+app.put("/chats/:id", async (req, res) => {
+    try {
+        let { id } = req.params;
+        let { msg: newMsg } = req.body;
+
+        await Chat.findByIdAndUpdate(
+            id,
+            {
+                msg: newMsg,
+                $set: { updated_at: new Date() }
+            },
+            {
+                runValidators: true,
+                new: true
+            }
+        );
+
+        res.redirect("/chats");
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Unable to update chat");
+    }
+});
+
 
 app.delete("/chats/:id" , async (req,res) => {
     let {id} = req.params;

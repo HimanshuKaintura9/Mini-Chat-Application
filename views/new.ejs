@@ -1,26 +1,67 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Chat</title>
+    <title>Create Chat</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-    <h3>WRITE A NEW CHAT !!</h3>
-    <form action="/chats" method="POST">
-        <input placeholder="senders name" name = "from">
-        <br>
-        <br>
-        <br>
-        <textarea name="msg" placeholder="Write your message here !!"></textarea>
-        <br>
-        <br>
-        <br>
-        <input placeholder="receivers name" name = "to">
-        <br>
-        <br>
-        <br>
-        <button type="submit">Create new chat</button>
-    </form>
+<body class="form-page">
+
+    <main class="form-wrapper">
+        <a href="/chats" class="back-link">← Back to all chats</a>
+
+        <section class="form-card">
+            <h1 class="form-heading">Create a new chat</h1>
+            <p class="form-description">
+                Add the sender, receiver, and message details below.
+            </p>
+
+            <form action="/chats" method="POST" class="chat-form">
+
+                <div class="field">
+                    <label for="from">Sender name</label>
+                    <input
+                        id="from"
+                        type="text"
+                        name="from"
+                        placeholder="e.g. Himanshu"
+                        maxlength="60"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="to">Receiver name</label>
+                    <input
+                        id="to"
+                        type="text"
+                        name="to"
+                        placeholder="e.g. Kylian"
+                        maxlength="60"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="msg">Your message</label>
+                    <textarea
+                        id="msg"
+                        name="msg"
+                        placeholder="Write your message here..."
+                        maxlength="100"
+                        required
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="form-submit">
+                    Create chat →
+                </button>
+
+            </form>
+        </section>
+    </main>
+
 </body>
 </html>

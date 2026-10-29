@@ -1,16 +1,48 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Message</title>
+    <title>Edit Chat</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-    <h3>Edit Yout Chat!! </h3>
-    <h3>Chat ID : <%= foundchat._id %></h3>
-    <form action="/chats/<%=foundchat._id%>?_method=PUT" method="POST">
-        <textarea name="msg" rows="10" cols="50"><%= foundchat.msg%></textarea>
-        <button>EDIT</button>
-    </form>
+<body class="form-page">
+
+    <main class="form-wrapper">
+        <a href="/chats" class="back-link">← Back to all chats</a>
+
+        <section class="form-card">
+            <h1 class="form-heading">Edit your message</h1>
+            <p class="form-description">
+                Update your message below. Your original sender and receiver will remain unchanged.
+            </p>
+
+            <div class="chat-id">
+                <strong>Chat ID:</strong> <%= foundchat._id %>
+            </div>
+
+            <form
+                action="/chats/<%= foundchat._id %>?_method=PUT"
+                method="POST"
+                class="chat-form"
+            >
+                <div class="field">
+                    <label for="msg">Message</label>
+                    <textarea
+                        id="msg"
+                        name="msg"
+                        maxlength="100"
+                        required
+                    ><%= foundchat.msg %></textarea>
+                </div>
+
+                <button type="submit" class="form-submit">
+                    Save changes
+                </button>
+            </form>
+        </section>
+    </main>
+
 </body>
 </html>
